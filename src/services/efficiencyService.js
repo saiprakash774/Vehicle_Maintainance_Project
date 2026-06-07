@@ -13,14 +13,6 @@ import { round } from '../utils/formatters';
 export const BASELINE_MPG = 28;
 
 /**
- * Flat MPG penalty applied while a Highway Emergency Sequence is active an
- * overheating engine under stress burns measurably more fuel than one cruising
- * at a healthy operating temperature, independent of (and additive with) any
- * tire-pressure or air-filter drag already in effect.
- */
-const EMERGENCY_DROP_PERCENT = 15;
-
-/**
  * How far past a degradation threshold a reading has to drift before it's
  * contributing the maximum drop keeps the 5-12% band realistic instead of
  * jumping straight to "worst case" the instant a sensor crosses the line.
@@ -55,21 +47,14 @@ function dropForSeverity(sev) {
  * readings every tick rather than maintaining separate simulation state.
  *
  * @param {Record<string, number>} readings  Latest reading per sensor key.
- * @param {Object} [options]
- * @param {boolean} [options.emergencyActive]  Whether a Highway Emergency Sequence is currently underway adds a flat penalty on top of any sensor-driven drag (see `EMERGENCY_DROP_PERCENT`).
  * @returns {EfficiencyReport}
  */
-export function computeEfficiency(readings, options = {}) {
+export function computeEfficiency(readings) {
   const tireSensor = SENSOR_MAP.tirePressure;
   const filterSensor = SENSOR_MAP.cabinAirFilterPressure;
 
   const causes = [];
   let totalDropPercent = 0;
-
-  if (options.emergencyActive) {
-    totalDropPercent += EMERGENCY_DROP_PERCENT;
-    causes.push('an active highway emergency the engine is overheating under load');
-  }
 
   if (readings.tirePressure < tireSensor.normalRange[0]) {
     const sev = severity(readings.tirePressure, tireSensor.normalRange[0], tireSensor.min);

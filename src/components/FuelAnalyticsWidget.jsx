@@ -9,13 +9,9 @@ import { computeEfficiency } from '../services/efficiencyService';
  *
  * @param {Object} props
  * @param {Record<string, number>} props.readings
- * @param {boolean} [props.emergencyActive]  Whether a Highway Emergency Sequence is currently underway folded into the report as an additional flat penalty (see `efficiencyService`).
  */
-export default function FuelAnalyticsWidget({ readings, emergencyActive = false }) {
-  const efficiency = useMemo(
-    () => computeEfficiency(readings, { emergencyActive }),
-    [readings, emergencyActive]
-  );
+export default function FuelAnalyticsWidget({ readings }) {
+  const efficiency = useMemo(() => computeEfficiency(readings), [readings]);
 
   return (
     <div
