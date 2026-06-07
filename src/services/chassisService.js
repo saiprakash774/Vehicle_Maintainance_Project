@@ -13,7 +13,7 @@ import { clamp, tickDefault } from '../utils/simulation';
 const STANDARD_KEYS = ['tirePressure', 'brakePadWear', 'brakeFluidPressure'];
 
 /**
- * Brake fluid is hygroscopic — it absorbs ambient moisture through hoses and
+ * Brake fluid is hygroscopic: it absorbs ambient moisture through hoses and
  * seals over time, so its water content only ever creeps upward in normal
  * operation (it's serviced, not "dried out", to bring it back down). On top of
  * that constant drift we add a bump proportional to how far this tick's brake

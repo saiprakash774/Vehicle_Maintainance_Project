@@ -10,7 +10,7 @@ import { clamp } from '../utils/simulation';
 /**
  * A cabin air filter accumulates debris over its service life, so the
  * differential pressure across it only ever trends upward between
- * replacements — mirroring the coolant micro-leak in the powertrain service,
+ * replacements, mirroring the coolant micro-leak in the powertrain service,
  * this is steady one-directional degradation plus a little sensor noise,
  * never a random walk back toward baseline.
  *
