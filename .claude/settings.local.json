@@ -14,7 +14,12 @@
       "Bash(node --input-type=module -e ' *)",
       "Bash(node verify-status.mjs)",
       "Bash(rm verify-status.mjs)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(git commit *)"
     ]
   }
 }
