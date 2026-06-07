@@ -10,7 +10,11 @@
       "Bash(chromium-cli screenshot *)",
       "Bash(npx --yes playwright@latest screenshot --browser chromium http://localhost:5173 /tmp/vmp-dashboard.png --wait-for-timeout 3000)",
       "Bash(npx playwright *)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(node --input-type=module -e ' *)",
+      "Bash(node verify-status.mjs)",
+      "Bash(rm verify-status.mjs)",
+      "Bash(git add *)"
     ]
   }
 }

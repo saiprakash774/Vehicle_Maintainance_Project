@@ -4,7 +4,16 @@ export default function AlertBanner({ alerts }) {
   if (alerts.length === 0) return null;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 8,
+        maxHeight: 320,
+        overflowY: 'auto',
+        paddingRight: 4,
+      }}
+    >
       {alerts.map((alert, i) => {
         const { color, bg } = STATUS_META[alert.status];
         return (

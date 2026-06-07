@@ -1,10 +1,10 @@
 import Gauge from './Gauge';
 import StatusBadge from './StatusBadge';
 import { STATUS_META } from '../utils/getStatus';
-import { THRESHOLDS } from '../utils/thresholds';
+import { SENSOR_MAP } from '../utils/thresholds';
 
-export default function SensorCard({ title, icon, sensorKey, value, status }) {
-  const cfg = THRESHOLDS[sensorKey];
+export default function SensorCard({ sensorKey, value, status }) {
+  const cfg = SENSOR_MAP[sensorKey];
   const { color } = STATUS_META[status] ?? STATUS_META.normal;
 
   return (
@@ -20,14 +20,13 @@ export default function SensorCard({ title, icon, sensorKey, value, status }) {
         alignItems: 'center',
         gap: 12,
         minWidth: 220,
-        flex: 1,
         transition: 'border-color 0.4s ease',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, alignSelf: 'flex-start' }}>
-        <span style={{ fontSize: '1.4rem' }}>{icon}</span>
+        <span style={{ fontSize: '1.4rem' }}>{cfg.icon}</span>
         <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#374151' }}>
-          {title}
+          {cfg.label}
         </h2>
       </div>
 
@@ -42,7 +41,7 @@ export default function SensorCard({ title, icon, sensorKey, value, status }) {
       <StatusBadge status={status} />
 
       <div style={{ fontSize: '0.75rem', color: '#9ca3af', textAlign: 'center' }}>
-        Safe range: {cfg.normal.min}–{cfg.normal.max} {cfg.unit}
+        Safe range: {cfg.normalRange[0]}–{cfg.normalRange[1]} {cfg.unit}
       </div>
     </div>
   );

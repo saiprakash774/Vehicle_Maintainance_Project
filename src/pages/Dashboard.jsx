@@ -1,50 +1,32 @@
 import { useEffect, useState } from 'react';
 import { startSimulation, stopSimulation } from '../services/telemetryService';
-import { getEngineTempStatus, getTirePressureStatus } from '../utils/getStatus';
+import { getStatus } from '../utils/getStatus';
 import { formatTimestamp } from '../utils/formatters';
-import { THRESHOLDS } from '../utils/thresholds';
+import { SENSORS } from '../utils/thresholds';
 import Header from '../components/Header';
 import SensorCard from '../components/SensorCard';
 import AlertBanner from '../components/AlertBanner';
 
-const INITIAL = {
-  engineTemp: THRESHOLDS.engineTemp.baseline,
-  tirePressure: THRESHOLDS.tirePressure.baseline,
-  timestamp: null,
-};
+const INITIAL = SENSORS.reduce(
+  (acc, sensor) => ({ ...acc, [sensor.key]: sensor.baseline }),
+  { timestamp: null }
+);
 
-function buildAlerts(engineTemp, tirePressure, engineStatus, tireStatus) {
+function buildAlerts(readings, statuses) {
   const alerts = [];
-  if (engineStatus === 'critical') {
+  SENSORS.forEach((sensor) => {
+    const status = statuses[sensor.key];
+    if (status === 'normal') return;
     alerts.push({
-      status: 'critical',
-      icon: '🔥',
-      title: 'Engine Overheating',
-      message: `Temperature is ${engineTemp}°C — immediate inspection required.`,
+      status,
+      icon: status === 'critical' ? '🚨' : '⚠️',
+      title: `${sensor.label} — ${status === 'critical' ? 'Critical' : 'Warning'}`,
+      message:
+        status === 'critical'
+          ? `Reading is ${readings[sensor.key]} ${sensor.unit} — schedule maintenance immediately.`
+          : `Reading is ${readings[sensor.key]} ${sensor.unit} — outside the optimal range.`,
     });
-  } else if (engineStatus === 'warning') {
-    alerts.push({
-      status: 'warning',
-      icon: '⚠️',
-      title: 'High Engine Temperature',
-      message: `Temperature is ${engineTemp}°C — approaching critical threshold.`,
-    });
-  }
-  if (tireStatus === 'critical') {
-    alerts.push({
-      status: 'critical',
-      icon: '💨',
-      title: 'Tire Pressure Critical',
-      message: `Pressure is ${tirePressure} PSI — check tires immediately.`,
-    });
-  } else if (tireStatus === 'warning') {
-    alerts.push({
-      status: 'warning',
-      icon: '⚠️',
-      title: 'Tire Pressure Warning',
-      message: `Pressure is ${tirePressure} PSI — outside optimal range.`,
-    });
-  }
+  });
   return alerts;
 }
 
@@ -61,14 +43,15 @@ export default function Dashboard() {
     return () => stopSimulation();
   }, [isRunning]);
 
-  const engineStatus = getEngineTempStatus(readings.engineTemp);
-  const tireStatus = getTirePressureStatus(readings.tirePressure);
-  const alerts = buildAlerts(readings.engineTemp, readings.tirePressure, engineStatus, tireStatus);
+  const statuses = Object.fromEntries(
+    SENSORS.map((sensor) => [sensor.key, getStatus(sensor.key, readings[sensor.key])])
+  );
+  const alerts = buildAlerts(readings, statuses);
 
   return (
     <main
       style={{
-        maxWidth: 900,
+        maxWidth: 1280,
         margin: '0 auto',
         padding: '32px 20px',
         fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
@@ -84,26 +67,20 @@ export default function Dashboard() {
 
       <div
         style={{
-          display: 'flex',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
           gap: 20,
-          flexWrap: 'wrap',
           marginTop: alerts.length > 0 ? 20 : 0,
         }}
       >
-        <SensorCard
-          title="Engine Temperature"
-          icon="🌡️"
-          sensorKey="engineTemp"
-          value={readings.engineTemp}
-          status={engineStatus}
-        />
-        <SensorCard
-          title="Tire Pressure"
-          icon="🛞"
-          sensorKey="tirePressure"
-          value={readings.tirePressure}
-          status={tireStatus}
-        />
+        {SENSORS.map((sensor) => (
+          <SensorCard
+            key={sensor.key}
+            sensorKey={sensor.key}
+            value={readings[sensor.key]}
+            status={statuses[sensor.key]}
+          />
+        ))}
       </div>
     </main>
   );

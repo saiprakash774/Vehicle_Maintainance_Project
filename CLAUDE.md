@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A production-ready, lightweight vehicle predictive maintenance application built with React. Simulates real-time vehicle telemetry (engine temperature, tire pressure) and alerts users when values exceed safe thresholds.
+A production-ready, lightweight vehicle predictive maintenance application built with React + Vite. Simulates real-time vehicle telemetry across nine parameters and alerts users when readings drift into warning or critical territory.
 
 ## Commands
 
@@ -12,50 +12,55 @@ A production-ready, lightweight vehicle predictive maintenance application built
 # Install dependencies
 npm install
 
-# Start development server
-npm start
+# Start development server (Vite, default port 5173)
+npm run dev
 
 # Build for production
 npm run build
 
-# Run tests
-npm test
+# Preview the production build
+npm run preview
 
-# Run a single test file
-npm test -- --testPathPattern="ComponentName"
+# Lint
+npm run lint
 ```
 
 ## Architecture
 
 The app is organized into four layers:
 
-- **`src/components/`** — Reusable UI primitives (gauges, status badges, alert banners). Stateless; receive data via props.
-- **`src/pages/`** — Route-level views that compose components. Own no data-fetching logic themselves.
-- **`src/services/`** — Simulation engine and any future API/WebSocket integrations. The telemetry service runs a `setInterval` loop to emit fluctuating readings for engine temperature and tire pressure, comparing values against threshold constants.
-- **`src/utils/`** — Pure helper functions: threshold evaluation, unit conversion, formatting.
+- **`src/components/`** — Reusable UI primitives (`Gauge`, `StatusBadge`, `SensorCard`, `AlertBanner`, `Header`). Stateless; receive data via props.
+- **`src/pages/`** — Route-level views that compose components. `Dashboard.jsx` owns the live readings state and drives the simulation lifecycle.
+- **`src/services/`** — `telemetryService.js`: the simulation engine (and the place to swap in a real API/WebSocket later).
+- **`src/utils/`** — Pure helpers: sensor config (`thresholds.js`), status evaluation (`getStatus.js`), formatting (`formatters.js`).
 
-### Data Flow
+### Data flow
 
 ```
-services/telemetryService.js  →  (callback / state update)
+services/telemetryService.js  →  emits { ...readings, timestamp } every tick
        ↓
-pages/Dashboard.jsx           →  holds live readings in React state
+pages/Dashboard.jsx           →  holds readings in state, derives a status per sensor,
+                                  builds the alert list
        ↓
-components/SensorCard.jsx     →  renders gauge + status indicator
-components/AlertBanner.jsx    →  conditionally renders when threshold breached
+components/SensorCard.jsx     →  Gauge + StatusBadge per sensor
+components/AlertBanner.jsx    →  scrollable list of active warning/critical alerts
 ```
 
-### Threshold constants
+### Sensor config is the single source of truth
 
-Defined in `src/utils/thresholds.js`:
+`src/utils/thresholds.js` exports `SENSORS`, an array of nine sensor descriptors (`engineTemp`, `oilTemp`, `brakePadWear`, `vibration`, `brakeFluidPressure`, `tirePressure`, `batteryVoltage`, `transmissionFluidTemp`, `emissions`). Each descriptor carries everything needed to simulate, evaluate, and render that sensor — `label`, `icon`, `unit`, `min`/`max`, `baseline`, `fluctuation`, `normalRange`, and `warningBands`. `SENSOR_MAP` provides O(1) lookup by key.
 
-| Parameter         | Safe range              |
-|-------------------|-------------------------|
-| Engine temperature | 70 °C – 110 °C         |
-| Tire pressure      | 30 PSI – 36 PSI        |
+Adding a tenth sensor means adding one object to `SENSORS` — the simulation loop, status evaluator, dashboard grid, and alert builder all iterate over this array generically and require no changes.
 
-Status levels: `"normal"` | `"warning"` | `"critical"` — derived in `src/utils/getStatus.js`.
+### Status evaluation
+
+`src/utils/getStatus.js` exports a single generic `getStatus(sensorKey, value)`:
+- inside `normalRange` → `"normal"`
+- inside any `warningBands` tuple → `"warning"`
+- otherwise (but within `[min, max]`) → `"critical"`
+
+`STATUS_META` maps each status to its label/color/background used by badges, gauges, and alert styling.
 
 ### Simulation
 
-`src/services/telemetryService.js` exposes `startSimulation(callback, intervalMs)` and `stopSimulation()`. The interval fires every second by default, generating random fluctuations around a baseline for each sensor. Clean up the interval in `useEffect` return to avoid memory leaks.
+`telemetryService.js` exposes `startSimulation(onReading, intervalMs = 1000)` / `stopSimulation()`. On each tick it advances every sensor's value with a random walk that's gently pulled back toward its `baseline` (`fluctuate`), and has a small (~2%) chance per sensor per tick of injecting a larger spike (`maybeSpike`) so warning/critical states surface during a normal demo session. `Dashboard.jsx` starts/stops the interval from a `useEffect` keyed on the pause/resume toggle and always cleans up on unmount.
