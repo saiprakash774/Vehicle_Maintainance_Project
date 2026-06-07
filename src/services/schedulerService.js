@@ -5,10 +5,26 @@ import { round } from '../utils/formatters';
  * @property {string} key
  * @property {string} label
  * @property {string} icon
+ * @property {'mileage'|'dateOnly'} trackingMode  Whether this reminder tracks
+ *   both mileage and calendar time, or calendar time alone (regulatory and
+ *   billing reminders like inspections or premiums have no mileage component).
+ * @property {number} intervalDays
+ * @property {number|null} intervalMiles  `null` for `dateOnly` reminders.
  * @property {Date} lastServicedDate
- * @property {number} lastServicedMileage
+ * @property {number|null} lastServicedMileage  `null` for `dateOnly` reminders.
  * @property {Date} nextDueDate
- * @property {number} nextDueMileage
+ * @property {number|null} nextDueMileage  `null` for `dateOnly` reminders.
+ */
+
+/**
+ * @typedef {Object} ServiceHistoryEntry
+ * @property {string} id
+ * @property {string} taskKey
+ * @property {string} taskName
+ * @property {string} icon
+ * @property {'Completed'|'Rescheduled'} action
+ * @property {Date} timestamp
+ * @property {number} mileage  Odometer reading at the moment of the action.
  */
 
 /**
@@ -55,6 +71,7 @@ const TASK_SEEDS = [
     key: 'coolantCheck',
     label: 'Coolant Level Check',
     icon: '🧊',
+    trackingMode: 'mileage',
     intervalDays: 90,
     intervalMiles: 5000,
     lastServicedDaysAgo: 80,
@@ -64,6 +81,7 @@ const TASK_SEEDS = [
     key: 'oilChange',
     label: 'Engine Oil Change',
     icon: '🛢️',
+    trackingMode: 'mileage',
     intervalDays: 180,
     intervalMiles: 5000,
     lastServicedDaysAgo: 184,
@@ -73,32 +91,60 @@ const TASK_SEEDS = [
     key: 'cabinFilter',
     label: 'Cabin Air Filter Replacement',
     icon: '🌀',
+    trackingMode: 'mileage',
     intervalDays: 365,
     intervalMiles: 12000,
     lastServicedDaysAgo: 30,
     lastServicedMilesAgo: 1000,
   },
+  {
+    key: 'vehicleInspection',
+    label: 'Annual State Vehicle Inspection',
+    icon: '🔍',
+    trackingMode: 'dateOnly',
+    intervalDays: 365,
+    lastServicedDaysAgo: 280,
+  },
+  {
+    key: 'insurancePremium',
+    label: 'Insurance Premium Payment',
+    icon: '🛡️',
+    trackingMode: 'dateOnly',
+    intervalDays: 182,
+    lastServicedDaysAgo: 170,
+  },
 ];
 
 /**
  * Resolve a seed definition into a full task record with concrete
- * last-serviced / next-due dates and mileages, anchored to "now".
+ * last-serviced / next-due dates (and, for mileage-tracked reminders,
+ * mileages), anchored to "now". `dateOnly` reminders carry `null` in every
+ * mileage field rather than a fabricated number: an inspection or a premium
+ * genuinely has no odometer relationship, and a generic countdown/urgency
+ * pipeline that branches on `null` is simpler than maintaining a parallel
+ * model just for calendar-only reminders.
  *
  * @param {typeof TASK_SEEDS[number]} seed
  * @returns {MaintenanceTask}
  */
 function buildTask(seed) {
   const lastServicedDate = new Date(Date.now() - seed.lastServicedDaysAgo * DAY_MS);
-  const lastServicedMileage = ODOMETER_BASELINE_MILES - seed.lastServicedMilesAgo;
+  const tracksMileage = seed.trackingMode === 'mileage';
+  const lastServicedMileage = tracksMileage
+    ? ODOMETER_BASELINE_MILES - seed.lastServicedMilesAgo
+    : null;
 
   return {
     key: seed.key,
     label: seed.label,
     icon: seed.icon,
+    trackingMode: seed.trackingMode,
+    intervalDays: seed.intervalDays,
+    intervalMiles: seed.intervalMiles ?? null,
     lastServicedDate,
     lastServicedMileage,
     nextDueDate: new Date(lastServicedDate.getTime() + seed.intervalDays * DAY_MS),
-    nextDueMileage: lastServicedMileage + seed.intervalMiles,
+    nextDueMileage: tracksMileage ? lastServicedMileage + seed.intervalMiles : null,
   };
 }
 
@@ -106,17 +152,18 @@ function buildTask(seed) {
 export const MAINTENANCE_TASKS = TASK_SEEDS.map(buildTask);
 
 /**
- * Determine how urgently a task needs attention. Whichever dimension 
- * mileage or calendar time is closer to its limit wins, since either one
- * crossing the line means the service is due.
+ * Determine how urgently a task needs attention. Whichever dimension,
+ * mileage or calendar time, is closer to its limit wins, since either one
+ * crossing the line means the service is due. `milesRemaining` is `null` for
+ * `dateOnly` reminders, so urgency for those rests on calendar time alone.
  *
- * @param {number} milesRemaining
+ * @param {number|null} milesRemaining
  * @param {number} daysRemaining
  * @returns {'safe'|'dueSoon'|'overdue'}
  */
 function classifyUrgency(milesRemaining, daysRemaining) {
-  if (milesRemaining <= 0 || daysRemaining <= 0) return 'overdue';
-  if (milesRemaining <= 500 || daysRemaining <= 14) return 'dueSoon';
+  if (daysRemaining <= 0 || (milesRemaining !== null && milesRemaining <= 0)) return 'overdue';
+  if (daysRemaining <= 14 || (milesRemaining !== null && milesRemaining <= 500)) return 'dueSoon';
   return 'safe';
 }
 
@@ -130,7 +177,9 @@ function classifyUrgency(milesRemaining, daysRemaining) {
  * @returns {TaskCountdown}
  */
 export function getTaskCountdown(task, odometer, now = new Date()) {
-  const milesRemaining = Math.round(task.nextDueMileage - odometer);
+  const milesRemaining = task.trackingMode === 'mileage'
+    ? Math.round(task.nextDueMileage - odometer)
+    : null;
   const daysRemaining = Math.ceil((task.nextDueDate.getTime() - now.getTime()) / DAY_MS);
 
   return {
@@ -138,5 +187,67 @@ export function getTaskCountdown(task, odometer, now = new Date()) {
     milesRemaining,
     daysRemaining,
     urgency: classifyUrgency(milesRemaining, daysRemaining),
+  };
+}
+
+/**
+ * Push a reminder's target due date forward: the user telling the scheduler
+ * "I'll get to this later than planned," without touching its service record
+ * (last serviced stays as it was; only the target moves).
+ *
+ * @param {MaintenanceTask} task
+ * @param {Date|string|number} newDate
+ * @returns {MaintenanceTask}
+ */
+export function rescheduleTask(task, newDate) {
+  return { ...task, nextDueDate: new Date(newDate) };
+}
+
+/**
+ * Record a manual "I just took care of this" confirmation: the service
+ * record resets to right now (and to the current odometer, for mileage-
+ * tracked reminders), and the next targets are recomputed the standard
+ * interval forward from that fresh baseline, exactly as if the work had
+ * gone through the normal service flow.
+ *
+ * @param {MaintenanceTask} task
+ * @param {number} odometer
+ * @param {Date} [now]
+ * @returns {MaintenanceTask}
+ */
+export function completeTask(task, odometer, now = new Date()) {
+  const tracksMileage = task.trackingMode === 'mileage';
+  const lastServicedMileage = tracksMileage ? Math.round(odometer) : null;
+
+  return {
+    ...task,
+    lastServicedDate: now,
+    lastServicedMileage,
+    nextDueDate: new Date(now.getTime() + task.intervalDays * DAY_MS),
+    nextDueMileage: tracksMileage ? lastServicedMileage + task.intervalMiles : null,
+  };
+}
+
+/**
+ * Build one audit-log record for a reminder action: everything the "Recent
+ * Activity" log needs to render a clean, self-contained line item without
+ * looking the task back up later. Takes the task's state *after* the action
+ * was applied, so `taskName`/`icon` reflect what the user just acted on.
+ *
+ * @param {MaintenanceTask} task
+ * @param {'Completed'|'Rescheduled'} action
+ * @param {number} odometer
+ * @param {Date} [timestamp]
+ * @returns {ServiceHistoryEntry}
+ */
+export function createHistoryEntry(task, action, odometer, timestamp = new Date()) {
+  return {
+    id: `${task.key}-${timestamp.getTime()}`,
+    taskKey: task.key,
+    taskName: task.label,
+    icon: task.icon,
+    action,
+    timestamp,
+    mileage: Math.round(odometer),
   };
 }
