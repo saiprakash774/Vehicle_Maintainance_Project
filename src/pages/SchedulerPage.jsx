@@ -1,23 +1,26 @@
 import { useOutletContext } from 'react-router-dom';
-import { MAINTENANCE_TASKS } from '../services/schedulerService';
+import { useMaintenanceScheduler } from '../hooks/useMaintenanceScheduler';
 import { formatDate } from '../utils/formatters';
 import MaintenanceSchedulerPanel from '../components/MaintenanceSchedulerPanel';
-
-const serviceHistory = [...MAINTENANCE_TASKS].sort(
-  (a, b) => b.lastServicedDate.getTime() - a.lastServicedDate.getTime()
-);
+import ActivityLogPanel from '../components/ActivityLogPanel';
 
 /**
  * The preventative scheduling center pairs the live odometer-driven
- * countdowns with a simple service-history log derived from the same
- * `MAINTENANCE_TASKS` data, so "what's coming due" and "what was done last"
- * read as two views of one record rather than separate subsystems.
+ * countdowns with a service-history snapshot and a running activity log, so
+ * "what's coming due," "what was done last," and "what did I just do about
+ * it" read as three views of one record rather than separate subsystems.
  *
  * Reads the live odometer from `AppLayout`'s shared telemetry subscription via
- * `Outlet` context (see `useVehicleTelemetry`) rather than starting its own.
+ * `Outlet` context (see `useVehicleTelemetry`), and owns the one
+ * `useMaintenanceScheduler` subscription that drives every panel below.
  */
 export default function SchedulerPage() {
   const { readings } = /** @type {import('../hooks/useVehicleTelemetry').VehicleTelemetryController} */ (useOutletContext());
+  const { tasks, historyLog, lastUpdated, reschedule, confirmManualCheck } = useMaintenanceScheduler(readings.odometer);
+
+  const serviceHistory = [...tasks].sort(
+    (a, b) => b.lastServicedDate.getTime() - a.lastServicedDate.getTime()
+  );
 
   return (
     <main style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 20px', fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif" }}>
@@ -41,7 +44,13 @@ export default function SchedulerPage() {
           alignItems: 'start',
         }}
       >
-        <MaintenanceSchedulerPanel odometer={readings.odometer} />
+        <MaintenanceSchedulerPanel
+          tasks={tasks}
+          odometer={readings.odometer}
+          lastUpdated={lastUpdated}
+          onConfirmCheck={confirmManualCheck}
+          onReschedule={reschedule}
+        />
 
         <div
           style={{
@@ -86,13 +95,16 @@ export default function SchedulerPage() {
                   <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151' }}>{task.label}</span>
                 </div>
                 <span style={{ fontSize: '0.8rem', color: '#6b7280', textAlign: 'right' }}>
-                  {formatDate(task.lastServicedDate)} · {task.lastServicedMileage.toLocaleString()} mi
+                  {formatDate(task.lastServicedDate)}
+                  {task.trackingMode === 'mileage' ? ` · ${task.lastServicedMileage.toLocaleString()} mi` : ''}
                 </span>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      <ActivityLogPanel entries={historyLog} />
     </main>
   );
 }
