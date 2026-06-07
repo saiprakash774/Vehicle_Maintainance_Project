@@ -29,7 +29,7 @@ export function randomWalk(current, sensor) {
 
 /**
  * With a small probability, return a value that has been knocked further from
- * baseline by a larger-than-normal excursion — simulating a transient real-world
+ * baseline by a larger-than-normal excursion, simulating a transient real-world
  * event (a hard brake, a cold start, a momentary sensor glitch) that pushes a
  * reading into warning/critical territory. Returns `current` unchanged most ticks.
  *
@@ -48,7 +48,7 @@ export function applySpike(current, sensor, probability = 0.02) {
 }
 
 /**
- * Convenience composition of the two default behaviors above — the "ordinary"
+ * Convenience composition of the two default behaviors above: the "ordinary"
  * tick for a sensor with no special-case physics.
  *
  * @param {number} current

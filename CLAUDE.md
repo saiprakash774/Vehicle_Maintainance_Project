@@ -29,10 +29,10 @@ npm run lint
 
 The app is organized into four layers:
 
-- **`src/components/`** — Reusable UI primitives (`Gauge`, `StatusBadge`, `SensorCard`, `AlertBanner`, `Header`). Stateless; receive data via props.
-- **`src/pages/`** — Route-level views that compose components. `Dashboard.jsx` owns the live readings state and drives the simulation lifecycle.
-- **`src/services/`** — `telemetryService.js`: the simulation engine (and the place to swap in a real API/WebSocket later).
-- **`src/utils/`** — Pure helpers: sensor config (`thresholds.js`), status evaluation (`getStatus.js`), formatting (`formatters.js`).
+- **`src/components/`** Reusable UI primitives (`Gauge`, `StatusBadge`, `SensorCard`, `AlertBanner`, `Header`). Stateless; receive data via props.
+- **`src/pages/`** Route-level views that compose components. `Dashboard.jsx` owns the live readings state and drives the simulation lifecycle.
+- **`src/services/`** `telemetryService.js`: the simulation engine (and the place to swap in a real API/WebSocket later).
+- **`src/utils/`** Pure helpers: sensor config (`thresholds.js`), status evaluation (`getStatus.js`), formatting (`formatters.js`).
 
 ### Data flow
 
@@ -48,9 +48,9 @@ components/AlertBanner.jsx    →  scrollable list of active warning/critical al
 
 ### Sensor config is the single source of truth
 
-`src/utils/thresholds.js` exports `SENSORS`, an array of nine sensor descriptors (`engineTemp`, `oilTemp`, `brakePadWear`, `vibration`, `brakeFluidPressure`, `tirePressure`, `batteryVoltage`, `transmissionFluidTemp`, `emissions`). Each descriptor carries everything needed to simulate, evaluate, and render that sensor — `label`, `icon`, `unit`, `min`/`max`, `baseline`, `fluctuation`, `normalRange`, and `warningBands`. `SENSOR_MAP` provides O(1) lookup by key.
+`src/utils/thresholds.js` exports `SENSORS`, an array of nine sensor descriptors (`engineTemp`, `oilTemp`, `brakePadWear`, `vibration`, `brakeFluidPressure`, `tirePressure`, `batteryVoltage`, `transmissionFluidTemp`, `emissions`). Each descriptor carries everything needed to simulate, evaluate, and render that sensor `label`, `icon`, `unit`, `min`/`max`, `baseline`, `fluctuation`, `normalRange`, and `warningBands`. `SENSOR_MAP` provides O(1) lookup by key.
 
-Adding a tenth sensor means adding one object to `SENSORS` — the simulation loop, status evaluator, dashboard grid, and alert builder all iterate over this array generically and require no changes.
+Adding a tenth sensor means adding one object to `SENSORS` the simulation loop, status evaluator, dashboard grid, and alert builder all iterate over this array generically and require no changes.
 
 ### Status evaluation
 

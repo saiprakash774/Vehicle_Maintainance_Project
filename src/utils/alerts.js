@@ -7,7 +7,7 @@
  */
 
 /**
- * Build the list of active maintenance alerts for a given subset of sensors —
+ * Build the list of active maintenance alerts for a given subset of sensors,
  * anything not in the "normal" status. Used both for a full-dashboard alert
  * feed and for per-domain scoped feeds (see `DomainSection`), so it accepts an
  * arbitrary sensor list rather than assuming the global `SENSORS` array.
@@ -27,11 +27,11 @@ export function buildAlerts(sensors, readings, statuses) {
     alerts.push({
       status,
       icon: status === 'critical' ? '🚨' : '⚠️',
-      title: `${sensor.label} — ${status === 'critical' ? 'Critical' : 'Warning'}`,
+      title: `${sensor.label}: ${status === 'critical' ? 'Critical' : 'Warning'}`,
       message:
         status === 'critical'
-          ? `Reading is ${readings[sensor.key]} ${sensor.unit} — schedule maintenance immediately.`
-          : `Reading is ${readings[sensor.key]} ${sensor.unit} — outside the optimal range.`,
+          ? `Reading is ${readings[sensor.key]} ${sensor.unit}; schedule maintenance immediately.`
+          : `Reading is ${readings[sensor.key]} ${sensor.unit}, outside the optimal range.`,
     });
   }
 

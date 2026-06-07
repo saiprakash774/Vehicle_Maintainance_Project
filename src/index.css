@@ -17,3 +17,38 @@ body {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%       { opacity: 0.5; transform: scale(1.3); }
 }
+
+/* Responsive app shell: a left sidebar on wide viewports collapses into a
+   horizontal top bar on narrow ones the one layout shift inline styles
+   alone can't express, so it lives here as the app's single real CSS rule. */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  flex-direction: column;
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.app-sidebar-nav {
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .app-sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .app-sidebar-nav {
+    flex-direction: row;
+  }
+}

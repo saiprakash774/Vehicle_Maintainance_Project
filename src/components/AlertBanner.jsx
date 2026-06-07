@@ -34,7 +34,7 @@ export default function AlertBanner({ alerts }) {
           >
             <span style={{ fontSize: '1.1rem' }}>{alert.icon}</span>
             <span>
-              <strong>{alert.title}</strong> — {alert.message}
+              <strong>{alert.title}</strong> {alert.message}
             </span>
           </div>
         );

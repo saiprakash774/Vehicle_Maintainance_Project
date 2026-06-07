@@ -6,7 +6,7 @@ import AlertBanner from './AlertBanner';
 
 /**
  * Groups a domain's sensors (Powertrain / Chassis / Cabin) under a labeled
- * section header, with its own scoped, conditional maintenance-alert banner —
+ * section header, with its own scoped, conditional maintenance-alert banner,
  * so a critical reading in Chassis doesn't get lost in a single dashboard-wide
  * feed alongside five unrelated Powertrain warnings.
  *

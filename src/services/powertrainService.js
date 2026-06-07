@@ -24,7 +24,7 @@ const STANDARD_KEYS = [
 ];
 
 /**
- * Coolant level only ever trends downward between services — real cooling
+ * Coolant level only ever trends downward between services: real cooling
  * systems develop slow seal/hose micro-leaks that don't self-heal. We model
  * this as a small constant loss per tick (scaled by a little randomness for
  * realism) rather than a random walk pulled toward baseline.
@@ -43,7 +43,7 @@ function tickCoolantLevel(current) {
  * Thermal efficiency is coupled to coolant level: as coolant is lost, the
  * system's ability to regulate engine heat degrades. We apply a small penalty
  * proportional to how far `coolantLevel` has dropped below its baseline on top
- * of the sensor's normal random walk — a simple but realistic cross-parameter
+ * of the sensor's normal random walk, a simple but realistic cross-parameter
  * relationship within the same domain.
  *
  * @param {number} current               Current efficiency reading.
