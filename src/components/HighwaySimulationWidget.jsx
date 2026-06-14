@@ -18,18 +18,18 @@ const percentInRange = (value, [min, max]) => clamp(((value - min) / (max - min)
 const PHASE_META = {
   leak: {
     caption: 'Status: Silent leak begins. Standard dashboards ignore this phase.',
-    color: '#0ea5e9',
-    bg: '#e0f2fe',
+    color: 'var(--color-info)',
+    bg: 'var(--color-info-bg)',
   },
   overheat: {
     caption: 'Status: Engine heat rising rapidly. Damage is imminent.',
-    color: '#f97316',
-    bg: '#ffedd5',
+    color: 'var(--color-orange)',
+    bg: 'var(--color-orange-bg)',
   },
   critical: {
     caption: 'Status: Critical threshold reached. Proactive alert engaged.',
-    color: '#ef4444',
-    bg: '#fee2e2',
+    color: 'var(--color-critical)',
+    bg: 'var(--color-critical-bg)',
   },
 };
 
@@ -63,21 +63,21 @@ function deriveSimState(elapsedMs) {
   };
 }
 
-const coolantColor = (value) => (value >= 70 ? '#22c55e' : value >= 45 ? '#f59e0b' : '#ef4444');
-const engineTempColor = (value) => (value <= 100 ? '#22c55e' : value <= 115 ? '#f59e0b' : '#ef4444');
+const coolantColor = (value) => (value >= 70 ? 'var(--color-success)' : value >= 45 ? 'var(--color-warning)' : 'var(--color-critical)');
+const engineTempColor = (value) => (value <= 100 ? 'var(--color-success)' : value <= 115 ? 'var(--color-warning)' : 'var(--color-critical)');
 const efficiencyColor = (value) => {
   const dropPercent = ((BASELINE.fuelEfficiency - value) / BASELINE.fuelEfficiency) * 100;
-  return dropPercent < 5 ? '#22c55e' : dropPercent < 12 ? '#f59e0b' : '#ef4444';
+  return dropPercent < 5 ? 'var(--color-success)' : dropPercent < 12 ? 'var(--color-warning)' : 'var(--color-critical)';
 };
 
 function MetricReadout({ icon, label, value, unit, percent, color }) {
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '0.8rem', color: '#6b7280' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
         <span>{icon} {label}</span>
         <span style={{ fontWeight: 700, fontSize: '0.95rem', color }}>{value}{unit}</span>
       </div>
-      <div style={{ height: 8, borderRadius: 999, background: '#e5e7eb', overflow: 'hidden', marginTop: 6 }}>
+      <div style={{ height: 8, borderRadius: 999, background: 'var(--color-border)', overflow: 'hidden', marginTop: 6 }}>
         <div
           style={{
             width: `${percent}%`,
@@ -160,11 +160,11 @@ export default function HighwaySimulationWidget() {
   return (
     <section
       style={{
-        background: '#fff',
+        background: 'var(--color-surface)',
         borderRadius: 16,
         padding: '28px 32px',
         boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-        borderTop: '4px solid #6366f1',
+        borderTop: '4px solid var(--color-indigo)',
         marginTop: 24,
         display: 'flex',
         flexDirection: 'column',
@@ -174,11 +174,11 @@ export default function HighwaySimulationWidget() {
       <div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
           <span style={{ fontSize: '1.5rem' }}>🛣️</span>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#111827' }}>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
             See the Tech in Action: The Highway Simulation
           </h2>
         </div>
-        <p style={{ margin: '10px 0 0', fontSize: '0.9rem', lineHeight: 1.7, color: '#374151', maxWidth: 760 }}>
+        <p style={{ margin: '10px 0 0', fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--color-text-secondary)', maxWidth: 760 }}>
           Reading about a slow leak is one thing; watching a dashboard react to one in real time is
           another. Press the button below to run a compressed, ten-second replay of the highway
           scenario from the story above, and watch these three readouts respond exactly the way the
@@ -228,7 +228,7 @@ export default function HighwaySimulationWidget() {
           style={{
             fontSize: '0.85rem',
             fontWeight: phaseMeta ? 600 : 400,
-            color: phaseMeta ? phaseMeta.color : '#9ca3af',
+            color: phaseMeta ? phaseMeta.color : 'var(--color-text-faint)',
             fontStyle: phaseMeta ? 'normal' : 'italic',
           }}
         >
@@ -246,7 +246,7 @@ export default function HighwaySimulationWidget() {
           style={{
             ...actionButtonBaseStyle,
             color: '#fff',
-            backgroundColor: isRunning ? '#fca5a5' : '#ef4444',
+            backgroundColor: isRunning ? 'var(--color-critical-muted)' : 'var(--color-critical)',
             boxShadow: isRunning ? 'none' : '0 6px 18px rgba(239, 68, 68, 0.35)',
             cursor: isRunning ? 'not-allowed' : 'pointer',
           }}
@@ -259,9 +259,9 @@ export default function HighwaySimulationWidget() {
           disabled={!canReset}
           style={{
             ...actionButtonBaseStyle,
-            color: canReset ? '#374151' : '#d1d5db',
-            backgroundColor: '#fff',
-            border: `1px solid ${canReset ? '#e5e7eb' : '#f3f4f6'}`,
+            color: canReset ? 'var(--color-text-secondary)' : 'var(--color-text-faint)',
+            backgroundColor: 'var(--color-surface)',
+            border: `1px solid ${canReset ? 'var(--color-border)' : 'var(--color-border-subtle)'}`,
             cursor: canReset ? 'pointer' : 'not-allowed',
           }}
         >
@@ -287,9 +287,9 @@ export default function HighwaySimulationWidget() {
         >
           <div
             style={{
-              background: '#fff',
+              background: 'var(--color-surface)',
               borderRadius: 16,
-              borderTop: '6px solid #ef4444',
+              borderTop: '6px solid var(--color-critical)',
               padding: '32px 36px',
               maxWidth: 480,
               width: '100%',
@@ -301,10 +301,10 @@ export default function HighwaySimulationWidget() {
             }}
           >
             <span style={{ fontSize: '2.75rem', animation: 'pulse 1.4s ease-in-out infinite' }}>🚨</span>
-            <h2 id="highway-sim-modal-title" style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: '#991b1b' }}>
+            <h2 id="highway-sim-modal-title" style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-critical-deep)' }}>
               PROACTIVE WARNING: Critical Coolant Drain
             </h2>
-            <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.6, color: '#374151' }}>
+            <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.6, color: 'var(--color-text-secondary)' }}>
               System recommends immediate highway pull-off.
             </p>
             <button
@@ -319,7 +319,7 @@ export default function HighwaySimulationWidget() {
                 fontWeight: 700,
                 fontSize: '0.9rem',
                 color: '#fff',
-                backgroundColor: '#ef4444',
+                backgroundColor: 'var(--color-critical)',
               }}
             >
               Acknowledge &amp; Reset Simulation

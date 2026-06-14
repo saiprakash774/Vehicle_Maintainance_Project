@@ -27,7 +27,7 @@ export default function Gauge({ value, min, max, status, unit }) {
       <path
         d={`M ${STROKE / 2} ${cy} A ${R} ${R} 0 0 1 ${SIZE - STROKE / 2} ${cy}`}
         fill="none"
-        stroke="#e5e7eb"
+        stroke="var(--color-border)"
         strokeWidth={STROKE}
         strokeLinecap="round"
       />
@@ -54,7 +54,7 @@ export default function Gauge({ value, min, max, status, unit }) {
       >
         {value}
       </text>
-      <text x={cx} y={cy + 14} textAnchor="middle" fontSize="11" fill="#6b7280">
+      <text x={cx} y={cy + 14} textAnchor="middle" fontSize="11" fill="var(--color-text-muted)">
         {unit}
       </text>
     </svg>

@@ -25,10 +25,10 @@ export default function SchedulerPage() {
   return (
     <main style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 20px', fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif" }}>
       <header style={{ marginBottom: 28 }}>
-        <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: '#111827' }}>
+        <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
           🗓️ Preventative Scheduling Center
         </h1>
-        <p style={{ margin: '6px 0 0', fontSize: '0.875rem', color: '#6b7280', maxWidth: 720 }}>
+        <p style={{ margin: '6px 0 0', fontSize: '0.875rem', color: 'var(--color-text-muted)', maxWidth: 720 }}>
           Calendar- and mileage-based service intervals, tracked against the live odometer the
           part of the "invisible maintenance gap" story sensors alone can't cover. A coolant
           sensor can warn you the level is low; nothing on the dashboard can sense that an oil
@@ -54,11 +54,11 @@ export default function SchedulerPage() {
 
         <div
           style={{
-            background: '#fff',
+            background: 'var(--color-surface)',
             borderRadius: 16,
             padding: '24px 28px',
             boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-            borderTop: '4px solid #0ea5e9',
+            borderTop: '4px solid var(--color-info)',
             display: 'flex',
             flexDirection: 'column',
             gap: 16,
@@ -67,11 +67,11 @@ export default function SchedulerPage() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: '1.4rem' }}>📋</span>
-              <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#374151' }}>
+              <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
                 Service History
               </h2>
             </div>
-            <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#9ca3af' }}>
+            <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--color-text-faint)' }}>
               Most recent service per tracked task, newest first.
             </p>
           </div>
@@ -87,14 +87,14 @@ export default function SchedulerPage() {
                   gap: 12,
                   padding: '12px 16px',
                   borderRadius: 10,
-                  backgroundColor: '#f9fafb',
+                  backgroundColor: 'var(--color-surface-alt)',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span style={{ fontSize: '1.1rem' }}>{task.icon}</span>
-                  <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151' }}>{task.label}</span>
+                  <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>{task.label}</span>
                 </div>
-                <span style={{ fontSize: '0.8rem', color: '#6b7280', textAlign: 'right' }}>
+                <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', textAlign: 'right' }}>
                   {formatDate(task.lastServicedDate)}
                   {task.trackingMode === 'mileage' ? ` · ${task.lastServicedMileage.toLocaleString()} mi` : ''}
                 </span>

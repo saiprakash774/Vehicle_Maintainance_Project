@@ -1,8 +1,8 @@
 import { formatTimestamp } from '../utils/formatters';
 
 const ACTION_META = {
-  Completed: { color: '#16a34a', bg: '#dcfce7' },
-  Rescheduled: { color: '#2563eb', bg: '#dbeafe' },
+  Completed: { color: 'var(--color-success-strong)', bg: 'var(--color-success-bg)' },
+  Rescheduled: { color: 'var(--color-blue)', bg: 'var(--color-blue-bg)' },
 };
 
 /**
@@ -19,11 +19,11 @@ export default function ActivityLogPanel({ entries }) {
   return (
     <section
       style={{
-        background: '#fff',
+        background: 'var(--color-surface)',
         borderRadius: 16,
         padding: '24px 28px',
         boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-        borderTop: '4px solid #a855f7',
+        borderTop: '4px solid var(--color-purple)',
         marginTop: 20,
         display: 'flex',
         flexDirection: 'column',
@@ -33,17 +33,17 @@ export default function ActivityLogPanel({ entries }) {
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: '1.4rem' }}>📜</span>
-          <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#374151' }}>
+          <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
             Recent Activity
           </h2>
         </div>
-        <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#9ca3af' }}>
+        <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--color-text-faint)' }}>
           Every reminder you mark completed or reschedule lands here, newest first.
         </p>
       </div>
 
       {entries.length === 0 ? (
-        <p style={{ margin: 0, fontSize: '0.85rem', color: '#9ca3af', fontStyle: 'italic' }}>
+        <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-faint)', fontStyle: 'italic' }}>
           No activity yet. Mark a reminder completed or reschedule one to start the log.
         </p>
       ) : (
@@ -71,14 +71,14 @@ export default function ActivityLogPanel({ entries }) {
                   gap: 12,
                   padding: '10px 14px',
                   borderRadius: 10,
-                  backgroundColor: '#f9fafb',
+                  backgroundColor: 'var(--color-surface-alt)',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
                   <span style={{ fontSize: '1.1rem' }}>{entry.icon}</span>
                   <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#374151' }}>{entry.taskName}</span>
-                    <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                    <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>{entry.taskName}</span>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-faint)' }}>
                       {formatTimestamp(entry.timestamp)} · {entry.mileage.toLocaleString()} mi
                     </span>
                   </div>
