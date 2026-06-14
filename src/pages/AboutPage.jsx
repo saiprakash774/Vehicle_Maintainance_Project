@@ -2,7 +2,7 @@ import { Fragment, useState } from 'react';
 import HighwaySimulationWidget from '../components/HighwaySimulationWidget';
 
 const sectionStyle = (accent) => ({
-  background: '#fff',
+  background: 'var(--color-surface)',
   borderRadius: 16,
   padding: '28px 32px',
   boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
@@ -16,7 +16,7 @@ const proseStyle = {
   gap: 12,
   fontSize: '0.9rem',
   lineHeight: 1.7,
-  color: '#374151',
+  color: 'var(--color-text-secondary)',
   maxWidth: 880,
 };
 
@@ -85,13 +85,13 @@ const COMPARISON_VIEWS = {
   before: {
     label: 'Traditional Reactive Car',
     sublabel: 'Check Engine Light Panic',
-    accent: '#ef4444',
-    bg: '#fef2f2',
-    border: '#fecaca',
+    accent: 'var(--color-critical)',
+    bg: 'var(--color-critical-bg)',
+    border: 'var(--color-critical-border)',
     headline: 'One amber light. Zero context.',
     body:
       "It could mean a loose gas cap or an engine about to seize, and there is no way to tell which from the driver's seat. So you wait, or you pay someone to plug in a scanner and tell you what the car already knew weeks ago.",
-    valueColor: '#9ca3af',
+    valueColor: 'var(--color-text-faint)',
     readouts: [
       { label: 'Coolant Level', value: 'Unknown' },
       { label: 'Engine Temperature', value: 'Unknown' },
@@ -101,13 +101,13 @@ const COMPARISON_VIEWS = {
   after: {
     label: 'Our Proactive Connected Platform',
     sublabel: 'Specific. Early. Plain Language.',
-    accent: '#16a34a',
-    bg: '#f0fdf4',
-    border: '#bbf7d0',
+    accent: 'var(--color-success-strong)',
+    bg: 'var(--color-success-bg)',
+    border: 'var(--color-success-border)',
     headline: 'Coolant trending down 0.4% per day. Worth a look this week.',
     body:
       "Nine systems tracked continuously, each one explained in plain language the moment it starts to drift. Not one ambiguous light: a specific reading, a specific trend, and enough lead time to schedule a fix on your own terms instead of the highway's.",
-    valueColor: '#111827',
+    valueColor: 'var(--color-text-primary)',
     readouts: [
       { label: 'Coolant Level', value: '91.9% (gently declining)' },
       { label: 'Engine Temperature', value: '86.5°C (within range)' },
@@ -139,12 +139,12 @@ const PIPELINE_STAGES = [
 
 function FeatureCard({ icon, title, description }) {
   return (
-    <div style={{ background: '#f9fafb', borderRadius: 14, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+    <div style={{ background: 'var(--color-surface-alt)', borderRadius: 14, padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 10 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ fontSize: '1.3rem' }}>{icon}</span>
-        <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: '#111827' }}>{title}</h3>
+        <h3 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{title}</h3>
       </div>
-      <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.65, color: '#4b5563' }}>{description}</p>
+      <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.65, color: 'var(--color-text-tertiary)' }}>{description}</p>
     </div>
   );
 }
@@ -153,8 +153,8 @@ function ScenarioCard({ icon, title, cause, resolution }) {
   return (
     <div
       style={{
-        background: '#fff',
-        border: '1px solid #f3f4f6',
+        background: 'var(--color-surface)',
+        border: '1px solid var(--color-border-subtle)',
         borderRadius: 14,
         padding: '20px 22px',
         display: 'flex',
@@ -165,19 +165,19 @@ function ScenarioCard({ icon, title, cause, resolution }) {
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <span style={{ fontSize: '1.4rem' }}>{icon}</span>
-        <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#111827' }}>{title}</h3>
+        <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{title}</h3>
       </div>
       <div>
-        <span style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#dc2626' }}>
+        <span style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--color-critical-strong)' }}>
           Mechanical Cause
         </span>
-        <p style={{ margin: '4px 0 0', fontSize: '0.83rem', lineHeight: 1.6, color: '#4b5563' }}>{cause}</p>
+        <p style={{ margin: '4px 0 0', fontSize: '0.83rem', lineHeight: 1.6, color: 'var(--color-text-tertiary)' }}>{cause}</p>
       </div>
       <div>
-        <span style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#16a34a' }}>
+        <span style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--color-success-strong)' }}>
           Proactive Resolution
         </span>
-        <p style={{ margin: '4px 0 0', fontSize: '0.83rem', lineHeight: 1.6, color: '#4b5563' }}>{resolution}</p>
+        <p style={{ margin: '4px 0 0', fontSize: '0.83rem', lineHeight: 1.6, color: 'var(--color-text-tertiary)' }}>{resolution}</p>
       </div>
     </div>
   );
@@ -198,7 +198,7 @@ function ComparisonToggleCard() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 700 }}>
-      <div style={{ display: 'inline-flex', borderRadius: 999, background: '#f3f4f6', padding: 4, gap: 4, alignSelf: 'flex-start' }}>
+      <div style={{ display: 'inline-flex', borderRadius: 999, background: 'var(--color-border-subtle)', padding: 4, gap: 4, alignSelf: 'flex-start' }}>
         {Object.entries(COMPARISON_VIEWS).map(([key, meta]) => (
           <button
             key={key}
@@ -211,8 +211,8 @@ function ComparisonToggleCard() {
               fontSize: '0.8rem',
               fontWeight: 600,
               cursor: 'pointer',
-              backgroundColor: view === key ? '#fff' : 'transparent',
-              color: view === key ? meta.accent : '#6b7280',
+              backgroundColor: view === key ? 'var(--color-surface)' : 'transparent',
+              color: view === key ? meta.accent : 'var(--color-text-muted)',
               boxShadow: view === key ? '0 1px 4px rgba(0,0,0,0.12)' : 'none',
               transition: 'background-color 0.2s ease, color 0.2s ease',
             }}
@@ -238,13 +238,13 @@ function ComparisonToggleCard() {
           <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: active.accent }}>
             {active.sublabel}
           </span>
-          <h4 style={{ margin: '4px 0 0', fontSize: '1.05rem', fontWeight: 700, color: '#111827' }}>{active.headline}</h4>
+          <h4 style={{ margin: '4px 0 0', fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{active.headline}</h4>
         </div>
-        <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.65, color: '#374151' }}>{active.body}</p>
+        <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.65, color: 'var(--color-text-secondary)' }}>{active.body}</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: 10 }}>
           {active.readouts.map((readout) => (
-            <div key={readout.label} style={{ background: '#fff', borderRadius: 10, padding: '12px 14px' }}>
-              <div style={{ fontSize: '0.72rem', color: '#9ca3af' }}>{readout.label}</div>
+            <div key={readout.label} style={{ background: 'var(--color-surface)', borderRadius: 10, padding: '12px 14px' }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--color-text-faint)' }}>{readout.label}</div>
               <div style={{ marginTop: 2, fontSize: '0.83rem', fontWeight: 700, color: active.valueColor }}>{readout.value}</div>
             </div>
           ))}
@@ -267,7 +267,7 @@ function DataPipelineDiagram() {
           <div
             style={{
               flex: '1 1 220px',
-              background: '#f9fafb',
+              background: 'var(--color-surface-alt)',
               borderRadius: 12,
               padding: '18px 20px',
               display: 'flex',
@@ -276,13 +276,13 @@ function DataPipelineDiagram() {
             }}
           >
             <span style={{ fontSize: '1.7rem' }}>{stage.icon}</span>
-            <strong style={{ fontSize: '0.88rem', color: '#111827' }}>{stage.label}</strong>
-            <span style={{ fontSize: '0.8rem', lineHeight: 1.55, color: '#6b7280' }}>{stage.caption}</span>
+            <strong style={{ fontSize: '0.88rem', color: 'var(--color-text-primary)' }}>{stage.label}</strong>
+            <span style={{ fontSize: '0.8rem', lineHeight: 1.55, color: 'var(--color-text-muted)' }}>{stage.caption}</span>
           </div>
           {index < PIPELINE_STAGES.length - 1 && (
             <div
               aria-hidden="true"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', color: '#bae6fd', minWidth: 28 }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', color: 'var(--color-cyan-accent)', minWidth: 28 }}
             >
               →
             </div>
@@ -305,20 +305,20 @@ export default function AboutPage() {
   return (
     <main style={{ maxWidth: 1040, margin: '0 auto', padding: '32px 20px', fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif" }}>
       <header>
-        <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: '#111827' }}>
+        <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
           📖 About: Why This Dashboard Exists
         </h1>
-        <p style={{ margin: '6px 0 0', fontSize: '0.875rem', color: '#6b7280', maxWidth: 720 }}>
+        <p style={{ margin: '6px 0 0', fontSize: '0.875rem', color: 'var(--color-text-muted)', maxWidth: 720 }}>
           A story-driven case study: the night that started this project, the feature ecosystem it
           grew into, the real-world scenarios it is built to catch early, and a couple of visuals
           that make the architecture concrete.
         </p>
       </header>
 
-      <section style={sectionStyle('#ef4444')}>
+      <section style={sectionStyle('var(--color-critical)')}>
         <div style={sectionHeadingStyle}>
           <span style={{ fontSize: '1.5rem' }}>🌙</span>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#111827' }}>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
             The Catalyst (Highway Nightmare)
           </h2>
         </div>
@@ -338,7 +338,7 @@ export default function AboutPage() {
             should have, and a faint sweet smell near the engine on a couple of mornings. Nothing
             dramatic enough to act on, and certainly nothing my dashboard had ever flagged.
           </p>
-          <p style={{ margin: 0, fontWeight: 600, color: '#991b1b' }}>
+          <p style={{ margin: 0, fontWeight: 600, color: 'var(--color-critical-deep)' }}>
             The simulation beside this story is a compressed, ten-second replay of exactly that
             night. Press the button and watch the same silent leak unfold the way it would have
             looked on a dashboard that was actually paying attention: early enough to pull into a
@@ -349,14 +349,14 @@ export default function AboutPage() {
 
       <HighwaySimulationWidget />
 
-      <section style={sectionStyle('#8b5cf6')}>
+      <section style={sectionStyle('var(--color-purple)')}>
         <div style={sectionHeadingStyle}>
           <span style={{ fontSize: '1.5rem' }}>🛠️</span>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#111827' }}>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
             Turning Trauma into Code (Feature Breakdown)
           </h2>
         </div>
-        <p style={{ margin: '0 0 18px', fontSize: '0.9rem', lineHeight: 1.7, color: '#374151', maxWidth: 880 }}>
+        <p style={{ margin: '0 0 18px', fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--color-text-secondary)', maxWidth: 880 }}>
           Every feature in this app traces back to some version of that night: a specific gap in
           what a standard dashboard tells you, rebuilt as something that actually would have
           helped. Here is what got built, and why each piece exists.
@@ -368,14 +368,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section style={sectionStyle('#f59e0b')}>
+      <section style={sectionStyle('var(--color-warning)')}>
         <div style={sectionHeadingStyle}>
           <span style={{ fontSize: '1.5rem' }}>🛣️</span>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#111827' }}>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
             Real-World Road Scenarios
           </h2>
         </div>
-        <p style={{ margin: '0 0 18px', fontSize: '0.9rem', lineHeight: 1.7, color: '#374151', maxWidth: 880 }}>
+        <p style={{ margin: '0 0 18px', fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--color-text-secondary)', maxWidth: 880 }}>
           Three mechanical stories show up again and again in driveways and repair shops: a slow
           leak nobody caught in time, a part that quietly chokes performance, and a deadline that
           slipped through the cracks. Here is the mechanical reality behind each one, and how this
@@ -388,28 +388,28 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section style={sectionStyle('#22c55e')}>
+      <section style={sectionStyle('var(--color-success)')}>
         <div style={sectionHeadingStyle}>
           <span style={{ fontSize: '1.5rem' }}>🔄</span>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#111827' }}>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
             From Reactive to Proactive: See the Difference
           </h2>
         </div>
-        <p style={{ margin: '0 0 18px', fontSize: '0.9rem', lineHeight: 1.7, color: '#374151', maxWidth: 880 }}>
+        <p style={{ margin: '0 0 18px', fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--color-text-secondary)', maxWidth: 880 }}>
           Same car, same sensors, two completely different driving experiences. Toggle between the
           dashboard most cars ship with today and the one this project builds toward.
         </p>
         <ComparisonToggleCard />
       </section>
 
-      <section style={sectionStyle('#0ea5e9')}>
+      <section style={sectionStyle('var(--color-info)')}>
         <div style={sectionHeadingStyle}>
           <span style={{ fontSize: '1.5rem' }}>📡</span>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#111827' }}>
+          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
             From Engine to Screen: How the Data Travels
           </h2>
         </div>
-        <p style={{ margin: '0 0 18px', fontSize: '0.9rem', lineHeight: 1.7, color: '#374151', maxWidth: 880 }}>
+        <p style={{ margin: '0 0 18px', fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--color-text-secondary)', maxWidth: 880 }}>
           None of this requires exotic hardware. Here is the same three-stage path real telemetry
           would travel, from the car's internal network to the screen in front of you, the exact
           path this app's adapter pattern is already built to support.

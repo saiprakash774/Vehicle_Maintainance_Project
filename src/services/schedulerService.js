@@ -41,9 +41,9 @@ export const ODOMETER_BASELINE_MILES = 55000;
 
 /** Color/label palette for countdown urgency deliberately mirrors `STATUS_META`. */
 export const URGENCY_META = {
-  safe: { label: 'Safe', color: '#22c55e', bg: '#dcfce7' },
-  dueSoon: { label: 'Due Soon', color: '#f59e0b', bg: '#fef3c7' },
-  overdue: { label: 'Overdue Inspect Immediately', color: '#ef4444', bg: '#fee2e2' },
+  safe: { label: 'Safe', color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
+  dueSoon: { label: 'Due Soon', color: 'var(--color-warning)', bg: 'var(--color-warning-bg)' },
+  overdue: { label: 'Overdue Inspect Immediately', color: 'var(--color-critical)', bg: 'var(--color-critical-bg)' },
 };
 
 /**

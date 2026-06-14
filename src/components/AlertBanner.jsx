@@ -29,7 +29,7 @@ export default function AlertBanner({ alerts }) {
               backgroundColor: bg,
               borderLeft: `4px solid ${color}`,
               fontSize: '0.875rem',
-              color: '#1f2937',
+              color: 'var(--color-text-primary)',
             }}
           >
             <span style={{ fontSize: '1.1rem' }}>{alert.icon}</span>

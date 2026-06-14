@@ -27,10 +27,10 @@ export default function DomainSection({ domain, readings }) {
     <section style={{ marginTop: 36 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 14 }}>
         <span style={{ fontSize: '1.5rem' }}>{meta.icon}</span>
-        <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#111827' }}>
+        <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
           {meta.label}
         </h2>
-        <span style={{ fontSize: '0.8rem', color: '#9ca3af' }}>{meta.description}</span>
+        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-faint)' }}>{meta.description}</span>
       </div>
 
       <AlertBanner alerts={alerts} />

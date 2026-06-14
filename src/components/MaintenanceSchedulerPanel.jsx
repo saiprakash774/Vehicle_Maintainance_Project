@@ -22,11 +22,11 @@ const actionButtonStyle = {
   gap: 6,
   padding: '6px 12px',
   borderRadius: 8,
-  border: '1px solid #e5e7eb',
-  background: '#fff',
+  border: '1px solid var(--color-border)',
+  background: 'var(--color-surface)',
   fontSize: '0.78rem',
   fontWeight: 600,
-  color: '#374151',
+  color: 'var(--color-text-secondary)',
   cursor: 'pointer',
 };
 
@@ -66,7 +66,7 @@ function TaskCard({ task, onConfirmCheck, onReschedule }) {
   return (
     <div
       style={{
-        background: '#fff',
+        background: 'var(--color-surface)',
         borderRadius: 14,
         padding: '18px 20px',
         boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
@@ -79,7 +79,7 @@ function TaskCard({ task, onConfirmCheck, onReschedule }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: '1.2rem' }}>{task.icon}</span>
-          <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 600, color: '#374151' }}>
+          <h3 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
             {task.label}
           </h3>
         </div>
@@ -101,7 +101,7 @@ function TaskCard({ task, onConfirmCheck, onReschedule }) {
         </span>
       </div>
 
-      <div style={{ fontSize: '0.8rem', color: '#6b7280', display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', display: 'flex', flexDirection: 'column', gap: 2 }}>
         <span>
           Last serviced: {formatDate(task.lastServicedDate)}
           {tracksMileage ? ` · ${task.lastServicedMileage.toLocaleString()} mi` : ''}
@@ -141,13 +141,14 @@ function TaskCard({ task, onConfirmCheck, onReschedule }) {
               fontSize: '0.8rem',
               padding: '6px 10px',
               borderRadius: 8,
-              border: '1px solid #e5e7eb',
-              color: '#374151',
+              border: '1px solid var(--color-border)',
+              color: 'var(--color-text-secondary)',
+              background: 'var(--color-surface)',
             }}
           />
           <button
             type="submit"
-            style={{ ...actionButtonStyle, background: '#eef2ff', borderColor: '#c7d2fe', color: '#4338ca' }}
+            style={{ ...actionButtonStyle, background: 'var(--color-indigo-bg)', borderColor: 'var(--color-indigo-border)', color: 'var(--color-indigo-strong)' }}
           >
             Confirm New Date
           </button>
@@ -181,11 +182,11 @@ export default function MaintenanceSchedulerPanel({ tasks, odometer, lastUpdated
   return (
     <div
       style={{
-        background: '#fff',
+        background: 'var(--color-surface)',
         borderRadius: 16,
         padding: '24px 28px',
         boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-        borderTop: '4px solid #6366f1',
+        borderTop: '4px solid var(--color-indigo)',
         display: 'flex',
         flexDirection: 'column',
         gap: 16,
@@ -194,14 +195,14 @@ export default function MaintenanceSchedulerPanel({ tasks, odometer, lastUpdated
       <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: '1.4rem' }}>🗓️</span>
-          <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#374151' }}>
+          <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
             Maintenance Scheduler
           </h2>
         </div>
-        <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#9ca3af' }}>
+        <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--color-text-faint)' }}>
           Odometer: {Math.round(odometer).toLocaleString()} mi
         </p>
-        <p style={{ margin: '6px 0 0', fontSize: '0.78rem', fontWeight: 600, color: '#6366f1' }}>
+        <p style={{ margin: '6px 0 0', fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-indigo)' }}>
           System Status Last Updated: {formatTimestamp(lastUpdated)}
         </p>
       </div>

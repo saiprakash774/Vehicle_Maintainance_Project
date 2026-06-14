@@ -1,9 +1,9 @@
 import { SENSOR_MAP } from './thresholds';
 
 export const STATUS_META = {
-  normal:   { label: 'Normal',   color: '#22c55e', bg: '#dcfce7' },
-  warning:  { label: 'Warning',  color: '#f59e0b', bg: '#fef3c7' },
-  critical: { label: 'Critical', color: '#ef4444', bg: '#fee2e2' },
+  normal:   { label: 'Normal',   color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
+  warning:  { label: 'Warning',  color: 'var(--color-warning)', bg: 'var(--color-warning-bg)' },
+  critical: { label: 'Critical', color: 'var(--color-critical)', bg: 'var(--color-critical-bg)' },
 };
 
 export function getStatus(sensorKey, value) {
